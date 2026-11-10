@@ -218,6 +218,7 @@ const PurchaseOrdersPage = () => {
                 <option value="Received">Received</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
+              <span className="field-hint">Tồn kho nguyên liệu chỉ được cộng khi trạng thái là "Received".</span>
             </label>
 
             <div className="items-editor">

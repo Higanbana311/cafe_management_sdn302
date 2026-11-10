@@ -47,7 +47,14 @@ const deductIngredientsForItems = async (items) => {
       ops.push({
         updateOne: {
           filter: { _id: ing.ingredientId },
-          update: { $inc: { stock: -(ing.quantity * item.quantity) }, $set: { lastUpdated: new Date() } },
+          update: [
+            {
+              $set: {
+                stock: { $round: [{ $subtract: ["$stock", ing.quantity * item.quantity] }, 2] },
+                lastUpdated: new Date(),
+              },
+            },
+          ],
         },
       });
     }
@@ -82,6 +89,26 @@ const awardLoyaltyPoints = async (customerId, totalAmount) => {
   if (newTier !== customer.tier) {
     await Customer.findByIdAndUpdate(customerId, { tier: newTier });
   }
+};
+
+// Redemption rate for spending points on a discount (independent of the
+// earn rate above): 1 point = 1,000 VND off the order.
+const POINT_VALUE_VND = 1000;
+
+const spendMemberPoints = async (customerId, pointsUsed) => {
+  if (!pointsUsed) return;
+  const customer = await Customer.findOneAndUpdate(
+    { _id: customerId, memberPoint: { $gte: pointsUsed } },
+    { $inc: { memberPoint: -pointsUsed } },
+  );
+  if (!customer) {
+    throw new Error("Insufficient member points.");
+  }
+};
+
+const refundMemberPoints = async (customerId, pointsUsed) => {
+  if (!pointsUsed || !customerId) return;
+  await Customer.findByIdAndUpdate(customerId, { $inc: { memberPoint: pointsUsed } });
 };
 
 const getAllOrders = async (req, res) => {
@@ -126,15 +153,17 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderStatus,
     } = req.body;
-    let { discountAmount, payment } = req.body;
+    let { discountAmount, payment, pointsUsed } = req.body;
+    pointsUsed = Number(pointsUsed) || 0;
     if (!CAN_MANAGE_PAYMENT.includes(req.user.role)) {
       discountAmount = 0;
+      pointsUsed = 0;
       payment = payment && { ...payment, status: "Unpaid", amount: 0, paidAt: null, transactionCode: null };
     }
     if (
       !orderCode ||
       !orderType ||
-      !tableId ||
+      (orderType === "Dine-in" && !tableId) ||
       !employeeId ||
       subTotal === undefined ||
       totalAmount === undefined ||
@@ -144,24 +173,42 @@ const createOrder = async (req, res) => {
     ) {
       return res.status(400).json({
         message:
-          "orderCode, orderType, tableId, employeeId, subTotal, totalAmount, orderStatus and payment.status are required.",
+          "orderCode, orderType, employeeId, subTotal, totalAmount, orderStatus and payment.status are required (tableId is also required for Dine-in orders).",
       });
     }
-    if (!isValidId(tableId)) {
-      return res.status(400).json({ message: "Invalid tableId." });
-    }
-    const table = await Table.findById(tableId);
-    if (!table) {
-      return res.status(400).json({ message: "Invalid tableId." });
-    }
-    if (orderType === "Dine-in" && table.status === "Occupied") {
-      return res.status(400).json({ message: "This table is already occupied by another order." });
+    let table = null;
+    if (tableId) {
+      if (!isValidId(tableId)) {
+        return res.status(400).json({ message: "Invalid tableId." });
+      }
+      table = await Table.findById(tableId);
+      if (!table) {
+        return res.status(400).json({ message: "Invalid tableId." });
+      }
+      if (orderType === "Dine-in" && table.status === "Occupied") {
+        return res.status(400).json({ message: "This table is already occupied by another order." });
+      }
     }
     if (!isValidId(employeeId) || !(await Employee.exists({ _id: employeeId }))) {
       return res.status(400).json({ message: "Invalid employeeId." });
     }
-    if (customerId && (!isValidId(customerId) || !(await Customer.exists({ _id: customerId })))) {
-      return res.status(400).json({ message: "Invalid customerId." });
+    let customer = null;
+    if (customerId) {
+      if (!isValidId(customerId)) {
+        return res.status(400).json({ message: "Invalid customerId." });
+      }
+      customer = await Customer.findById(customerId);
+      if (!customer) {
+        return res.status(400).json({ message: "Invalid customerId." });
+      }
+    }
+    if (pointsUsed > 0) {
+      if (!customer) {
+        return res.status(400).json({ message: "A customer must be selected to use member points." });
+      }
+      if (pointsUsed > customer.memberPoint) {
+        return res.status(400).json({ message: "Customer does not have enough member points." });
+      }
     }
     const itemsError = await validateItems(items);
     if (itemsError) {
@@ -173,7 +220,7 @@ const createOrder = async (req, res) => {
     const savedOrder = await new Order({
       orderCode,
       orderType,
-      tableId,
+      tableId: tableId || null,
       customerId: customerId || null,
       employeeId,
       orderDate: orderDate || new Date(),
@@ -181,13 +228,17 @@ const createOrder = async (req, res) => {
       subTotal,
       promotion: promotion || null,
       discountAmount: discountAmount || 0,
+      pointsUsed,
       totalAmount,
       orderStatus,
       payment,
     }).save();
 
     await deductIngredientsForItems(items);
-    if (orderType === "Dine-in" && !["Completed", "Cancelled"].includes(orderStatus)) {
+    if (pointsUsed > 0) {
+      await spendMemberPoints(customerId, pointsUsed);
+    }
+    if (orderType === "Dine-in" && tableId && !["Completed", "Cancelled"].includes(orderStatus)) {
       await setTableStatus(tableId, "Occupied");
     }
     if (orderStatus === "Completed") {
@@ -218,6 +269,7 @@ const updateOrder = async (req, res) => {
       orderStatus,
       payment,
     } = req.body;
+    const pointsUsed = Number(req.body.pointsUsed) || 0;
     if (!isValidId(id)) {
       return res.status(400).json({ message: "Invalid order id." });
     }
@@ -228,7 +280,7 @@ const updateOrder = async (req, res) => {
     if (
       !orderCode ||
       !orderType ||
-      !tableId ||
+      (orderType === "Dine-in" && !tableId) ||
       !employeeId ||
       subTotal === undefined ||
       totalAmount === undefined ||
@@ -238,17 +290,37 @@ const updateOrder = async (req, res) => {
     ) {
       return res.status(400).json({
         message:
-          "orderCode, orderType, tableId, employeeId, subTotal, totalAmount, orderStatus and payment.status are required.",
+          "orderCode, orderType, employeeId, subTotal, totalAmount, orderStatus and payment.status are required (tableId is also required for Dine-in orders).",
       });
     }
-    if (!isValidId(tableId) || !(await Table.exists({ _id: tableId }))) {
+    if (tableId && (!isValidId(tableId) || !(await Table.exists({ _id: tableId })))) {
       return res.status(400).json({ message: "Invalid tableId." });
     }
     if (!isValidId(employeeId) || !(await Employee.exists({ _id: employeeId }))) {
       return res.status(400).json({ message: "Invalid employeeId." });
     }
-    if (customerId && (!isValidId(customerId) || !(await Customer.exists({ _id: customerId })))) {
-      return res.status(400).json({ message: "Invalid customerId." });
+    let customer = null;
+    if (customerId) {
+      if (!isValidId(customerId)) {
+        return res.status(400).json({ message: "Invalid customerId." });
+      }
+      customer = await Customer.findById(customerId);
+      if (!customer) {
+        return res.status(400).json({ message: "Invalid customerId." });
+      }
+    }
+    const previousPointsUsed = existing.pointsUsed || 0;
+    if (pointsUsed > 0) {
+      if (!customer) {
+        return res.status(400).json({ message: "A customer must be selected to use member points." });
+      }
+      // Points this order already spent come back into the pool when checking
+      // if it's the same customer redeeming again on this edit.
+      const sameCustomer = existing.customerId && String(existing.customerId) === String(customerId);
+      const availablePoints = customer.memberPoint + (sameCustomer ? previousPointsUsed : 0);
+      if (pointsUsed > availablePoints) {
+        return res.status(400).json({ message: "Customer does not have enough member points." });
+      }
     }
     const itemsError = await validateItems(items);
     if (itemsError) {
@@ -262,7 +334,7 @@ const updateOrder = async (req, res) => {
       {
         orderCode,
         orderType,
-        tableId,
+        tableId: tableId || null,
         customerId: customerId || null,
         employeeId,
         orderDate,
@@ -270,6 +342,7 @@ const updateOrder = async (req, res) => {
         subTotal,
         promotion: promotion || null,
         discountAmount: discountAmount || 0,
+        pointsUsed,
         totalAmount,
         orderStatus,
         payment,
@@ -277,6 +350,10 @@ const updateOrder = async (req, res) => {
       { new: true, runValidators: true },
     );
 
+    if (pointsUsed !== previousPointsUsed) {
+      await refundMemberPoints(existing.customerId, previousPointsUsed);
+      await spendMemberPoints(customerId, pointsUsed);
+    }
     if (existing.orderStatus !== "Completed" && orderStatus === "Completed") {
       await awardLoyaltyPoints(customerId, totalAmount);
     }

@@ -42,7 +42,8 @@ const orderSchema = new mongoose.Schema(
         tableId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Table',
-            required: true
+            default: null,
+            required: [function () { return this.orderType === 'Dine-in'; }, 'tableId is required for Dine-in orders.']
         },
         customerId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -59,6 +60,7 @@ const orderSchema = new mongoose.Schema(
         subTotal: { type: Number, required: true, min: 0 },
         promotion: { type: promotionSchema, default: null },
         discountAmount: { type: Number, default: 0, min: 0 },
+        pointsUsed: { type: Number, default: 0, min: 0 },
         totalAmount: { type: Number, required: true, min: 0 },
         orderStatus: { type: String, required: true, trim: true },
         payment: { type: paymentSchema, required: true }

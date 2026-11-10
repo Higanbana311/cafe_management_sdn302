@@ -8,6 +8,9 @@ import { ORDER_STATUS_OPTIONS as STATUS_OPTIONS } from "../constants/orderStatus
 
 const formatVND = (n) => (n || 0).toLocaleString("vi-VN") + " đ";
 
+// 1 member point = 1,000 VND off the order (matches backend POINT_VALUE_VND).
+const POINT_VALUE_VND = 1000;
+
 const emptyItemRow = () => ({ productId: "", productName: "", quantity: "", unitPrice: "" });
 
 const emptyForm = () => ({
@@ -17,6 +20,7 @@ const emptyForm = () => ({
   customerId: "",
   employeeId: "",
   discountAmount: "",
+  pointsUsed: "",
   promoCode: "",
   promotion: null,
   orderStatus: "Pending",
@@ -150,10 +154,11 @@ const OrdersPage = () => {
     setForm({
       orderCode: row.orderCode,
       orderType: row.orderType,
-      tableId: row.tableId,
+      tableId: row.tableId || "",
       customerId: row.customerId || "",
       employeeId: row.employeeId,
       discountAmount: row.discountAmount || 0,
+      pointsUsed: row.pointsUsed || 0,
       promoCode: row.promotion?.code || "",
       promotion: row.promotion || null,
       orderStatus: row.orderStatus,
@@ -184,7 +189,15 @@ const OrdersPage = () => {
   const removeItemRow = (index) => setForm((prev) => ({ ...prev, items: prev.items.filter((_, i) => i !== index) }));
 
   const subTotal = form.items.reduce((sum, row) => sum + computeSubtotal(row), 0);
-  const total = Math.max(0, subTotal - (Number(form.discountAmount) || 0));
+
+  const selectedCustomer = customers.find((c) => c._id === form.customerId);
+  // Points this order already spent (when editing) go back into the pool
+  // while that same customer stays selected, so they can be re-entered.
+  const availablePoints = selectedCustomer
+    ? selectedCustomer.memberPoint + (editing && editing.customerId === form.customerId ? editing.pointsUsed || 0 : 0)
+    : 0;
+  const pointsDiscount = Math.min(Number(form.pointsUsed) || 0, availablePoints) * POINT_VALUE_VND;
+  const total = Math.max(0, subTotal - (Number(form.discountAmount) || 0) - pointsDiscount);
 
   const applyPromoCode = async () => {
     if (!form.promoCode.trim()) return;
@@ -220,6 +233,7 @@ const OrdersPage = () => {
         subTotal,
         promotion: form.promotion || null,
         discountAmount: Number(form.discountAmount) || 0,
+        pointsUsed: Math.min(Number(form.pointsUsed) || 0, availablePoints),
         totalAmount: total,
         payment: {
           method: form.paymentMethod,
@@ -304,15 +318,26 @@ const OrdersPage = () => {
             </label>
             <label className="form-field">
               <span>Loại đơn *</span>
-              <select value={form.orderType} onChange={(e) => setForm({ ...form, orderType: e.target.value })} required>
+              <select
+                value={form.orderType}
+                onChange={(e) =>
+                  setForm({ ...form, orderType: e.target.value, tableId: e.target.value === "Dine-in" ? form.tableId : "" })
+                }
+                required
+              >
                 <option value="Dine-in">Dine-in</option>
                 <option value="Takeaway">Takeaway</option>
                 <option value="Delivery">Delivery</option>
               </select>
             </label>
             <label className="form-field">
-              <span>Bàn *</span>
-              <select value={form.tableId} onChange={(e) => setForm({ ...form, tableId: e.target.value })} required>
+              <span>Bàn {form.orderType === "Dine-in" ? "*" : ""}</span>
+              <select
+                value={form.tableId}
+                onChange={(e) => setForm({ ...form, tableId: e.target.value })}
+                required={form.orderType === "Dine-in"}
+                disabled={form.orderType !== "Dine-in"}
+              >
                 <option value="">-- Chọn bàn --</option>
                 {tables.map((t) => (
                   <option key={t._id} value={t._id}>
@@ -323,11 +348,14 @@ const OrdersPage = () => {
             </label>
             <label className="form-field">
               <span>Khách hàng</span>
-              <select value={form.customerId} onChange={(e) => setForm({ ...form, customerId: e.target.value })}>
+              <select
+                value={form.customerId}
+                onChange={(e) => setForm({ ...form, customerId: e.target.value, pointsUsed: "" })}
+              >
                 <option value="">Khách lẻ</option>
                 {customers.map((c) => (
                   <option key={c._id} value={c._id}>
-                    {c.name}
+                    {c.name} ({c.memberPoint || 0} điểm)
                   </option>
                 ))}
               </select>
@@ -386,6 +414,25 @@ const OrdersPage = () => {
                   <span>Giảm giá (VNĐ)</span>
                   <input type="number" value={form.discountAmount} onChange={(e) => setForm({ ...form, discountAmount: e.target.value })} />
                 </label>
+                <div className="form-field">
+                  <span>Dùng điểm tích lũy (1 điểm = {formatVND(POINT_VALUE_VND)})</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max={availablePoints}
+                    value={form.pointsUsed}
+                    disabled={!form.customerId}
+                    onChange={(e) =>
+                      setForm({ ...form, pointsUsed: Math.max(0, Math.min(Number(e.target.value) || 0, availablePoints)) })
+                    }
+                  />
+                  <span className="field-hint">
+                    {form.customerId
+                      ? `Khách còn ${availablePoints} điểm (tương đương ${formatVND(availablePoints * POINT_VALUE_VND)})`
+                      : "Chọn khách hàng để dùng điểm."}
+                    {pointsDiscount > 0 && ` — Đang giảm ${formatVND(pointsDiscount)} từ điểm.`}
+                  </span>
+                </div>
                 <label className="form-field">
                   <span>Hình thức thanh toán</span>
                   <select value={form.paymentMethod} onChange={(e) => setForm({ ...form, paymentMethod: e.target.value })}>
@@ -439,7 +486,8 @@ const OrdersPage = () => {
                 </div>
               ))}
               <div className="items-editor-total">
-                Tạm tính: {formatVND(subTotal)} — Giảm giá: {formatVND(Number(form.discountAmount) || 0)} — <strong>Thành tiền: {formatVND(total)}</strong>
+                Tạm tính: {formatVND(subTotal)} — Giảm giá: {formatVND(Number(form.discountAmount) || 0)}
+                {pointsDiscount > 0 && ` — Điểm: -${formatVND(pointsDiscount)}`} — <strong>Thành tiền: {formatVND(total)}</strong>
               </div>
             </div>
 

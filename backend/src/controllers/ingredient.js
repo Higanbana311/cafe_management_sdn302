@@ -108,7 +108,16 @@ const adjustStock = async (req, res) => {
       type === "subtract" ? { _id: id, stock: { $gte: quantity } } : { _id: id };
     const ingredient = await Ingredient.findOneAndUpdate(
       filter,
-      { $inc: { stock: type === "add" ? quantity : -quantity }, lastUpdated: new Date() },
+      [
+        {
+          $set: {
+            stock: {
+              $round: [{ $add: ["$stock", type === "add" ? quantity : -quantity] }, 2],
+            },
+            lastUpdated: new Date(),
+          },
+        },
+      ],
       { new: true, runValidators: true },
     );
     if (!ingredient) {
