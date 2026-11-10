@@ -1,0 +1,130 @@
+[
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000001"
+    },
+    "name": "Coffee Bean",
+    "category": "Raw Material",
+    "unit": "kg",
+    "stock": 18.5,
+    "minStock": 5,
+    "supplierId": {
+      "$oid": "1b0000000000000000000001"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000002"
+    },
+    "name": "Fresh Milk",
+    "category": "Dairy",
+    "unit": "liter",
+    "stock": 32,
+    "minStock": 10,
+    "supplierId": {
+      "$oid": "1b0000000000000000000002"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000003"
+    },
+    "name": "Condensed Milk",
+    "category": "Dairy",
+    "unit": "can",
+    "stock": 24,
+    "minStock": 8,
+    "supplierId": {
+      "$oid": "1b0000000000000000000002"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000004"
+    },
+    "name": "Peach Syrup",
+    "category": "Syrup",
+    "unit": "bottle",
+    "stock": 12,
+    "minStock": 4,
+    "supplierId": {
+      "$oid": "1b0000000000000000000003"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000005"
+    },
+    "name": "Lychee Syrup",
+    "category": "Syrup",
+    "unit": "bottle",
+    "stock": 10,
+    "minStock": 4,
+    "supplierId": {
+      "$oid": "1b0000000000000000000003"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000006"
+    },
+    "name": "Matcha Powder",
+    "category": "Powder",
+    "unit": "kg",
+    "stock": 4.2,
+    "minStock": 1,
+    "supplierId": {
+      "$oid": "1b0000000000000000000003"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000007"
+    },
+    "name": "Croissant",
+    "category": "Bakery",
+    "unit": "piece",
+    "stock": 35,
+    "minStock": 10,
+    "supplierId": {
+      "$oid": "1b0000000000000000000004"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "1c0000000000000000000008"
+    },
+    "name": "Tiramisu Slice",
+    "category": "Bakery",
+    "unit": "piece",
+    "stock": 25,
+    "minStock": 8,
+    "supplierId": {
+      "$oid": "1b0000000000000000000004"
+    },
+    "lastUpdated": {
+      "$date": "2026-10-06T02:00:00.000Z"
+    }
+  }
+]

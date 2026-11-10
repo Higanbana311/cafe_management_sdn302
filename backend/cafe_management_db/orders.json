@@ -1,0 +1,101 @@
+[
+  {
+    "_id": { "$oid": "190000000000000000000001" },
+    "orderCode": "ORD001",
+    "orderType": "Dine-in",
+    "tableId": { "$oid": "170000000000000000000002" },
+    "customerId": { "$oid": "120000000000000000000001" },
+    "employeeId": { "$oid": "140000000000000000000002" },
+    "orderDate": { "$date": "2026-10-06T01:15:00.000Z" },
+    "items": [
+      { "productId": { "$oid": "110000000000000000000002" }, "productName": "Cà phê sữa", "quantity": 2, "unitPrice": 30000, "subtotal": 60000 },
+      { "productId": { "$oid": "110000000000000000000009" }, "productName": "Croissant bơ", "quantity": 2, "unitPrice": 30000, "subtotal": 60000 }
+    ],
+    "subTotal": 120000,
+    "promotion": { "code": "CAFE10", "discountType": "Percentage", "discountValue": 10 },
+    "discountAmount": 12000,
+    "totalAmount": 108000,
+    "orderStatus": "Completed",
+    "payment": {
+      "method": "Cash",
+      "amount": 108000,
+      "paidAt": { "$date": "2026-10-06T01:40:00.000Z" },
+      "status": "Paid",
+      "transactionCode": null
+    }
+  },
+  {
+    "_id": { "$oid": "190000000000000000000002" },
+    "orderCode": "ORD002",
+    "orderType": "Dine-in",
+    "tableId": { "$oid": "170000000000000000000005" },
+    "customerId": { "$oid": "120000000000000000000002" },
+    "employeeId": { "$oid": "140000000000000000000002" },
+    "orderDate": { "$date": "2026-10-06T02:05:00.000Z" },
+    "items": [
+      { "productId": { "$oid": "110000000000000000000004" }, "productName": "Cappuccino", "quantity": 1, "unitPrice": 45000, "subtotal": 45000 },
+      { "productId": { "$oid": "110000000000000000000008" }, "productName": "Matcha Latte", "quantity": 1, "unitPrice": 48000, "subtotal": 48000 }
+    ],
+    "subTotal": 93000,
+    "promotion": null,
+    "discountAmount": 0,
+    "totalAmount": 93000,
+    "orderStatus": "Completed",
+    "payment": {
+      "method": "Bank Transfer",
+      "amount": 93000,
+      "paidAt": { "$date": "2026-10-06T02:30:00.000Z" },
+      "status": "Paid",
+      "transactionCode": "BANK001"
+    }
+  },
+  {
+    "_id": { "$oid": "190000000000000000000003" },
+    "orderCode": "ORD003",
+    "orderType": "Dine-in",
+    "tableId": { "$oid": "170000000000000000000002" },
+    "customerId": null,
+    "employeeId": { "$oid": "140000000000000000000004" },
+    "orderDate": { "$date": "2026-10-06T03:20:00.000Z" },
+    "items": [
+      { "productId": { "$oid": "110000000000000000000006" }, "productName": "Trà đào cam sả", "quantity": 2, "unitPrice": 40000, "subtotal": 80000 }
+    ],
+    "subTotal": 80000,
+    "promotion": null,
+    "discountAmount": 0,
+    "totalAmount": 80000,
+    "orderStatus": "Serving",
+    "payment": {
+      "method": null,
+      "amount": 0,
+      "paidAt": null,
+      "status": "Unpaid",
+      "transactionCode": null
+    }
+  },
+  {
+    "_id": { "$oid": "190000000000000000000004" },
+    "orderCode": "ORD004",
+    "orderType": "Dine-in",
+    "tableId": { "$oid": "170000000000000000000007" },
+    "customerId": { "$oid": "120000000000000000000004" },
+    "employeeId": { "$oid": "140000000000000000000004" },
+    "orderDate": { "$date": "2026-10-06T03:40:00.000Z" },
+    "items": [
+      { "productId": { "$oid": "110000000000000000000001" }, "productName": "Cà phê đen", "quantity": 2, "unitPrice": 25000, "subtotal": 50000 },
+      { "productId": { "$oid": "11000000000000000000000a" }, "productName": "Tiramisu", "quantity": 1, "unitPrice": 45000, "subtotal": 45000 }
+    ],
+    "subTotal": 95000,
+    "promotion": { "code": "MORNING15", "discountType": "Percentage", "discountValue": 15 },
+    "discountAmount": 14250,
+    "totalAmount": 80750,
+    "orderStatus": "Completed",
+    "payment": {
+      "method": "E-Wallet",
+      "amount": 80750,
+      "paidAt": { "$date": "2026-10-06T04:00:00.000Z" },
+      "status": "Paid",
+      "transactionCode": "EWALLET001"
+    }
+  }
+]

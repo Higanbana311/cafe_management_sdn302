@@ -1,0 +1,42 @@
+[
+  {
+    "_id": {
+      "$oid": "1b0000000000000000000001"
+    },
+    "name": "Hạt Việt Coffee",
+    "phone": "0908111222",
+    "email": "hatviet@example.com",
+    "address": "Hà Nội",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "1b0000000000000000000002"
+    },
+    "name": "Fresh Milk Distribution",
+    "phone": "0908333444",
+    "email": "freshmilk@example.com",
+    "address": "Hà Nội",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "1b0000000000000000000003"
+    },
+    "name": "Tea & Syrup Việt",
+    "phone": "0908444555",
+    "email": "teasyrup@example.com",
+    "address": "Hà Nội",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "1b0000000000000000000004"
+    },
+    "name": "Daily Bakery Supplier",
+    "phone": "0908555666",
+    "email": "bakery@example.com",
+    "address": "Hà Nội",
+    "status": "Active"
+  }
+]

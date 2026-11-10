@@ -1,0 +1,50 @@
+[
+  {
+    "_id": {
+      "$oid": "100000000000000000000001"
+    },
+    "name": "Coffee",
+    "description": "Các loại đồ uống từ cà phê",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "100000000000000000000002"
+    },
+    "name": "Tea",
+    "description": "Các loại trà và trà trái cây",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "100000000000000000000003"
+    },
+    "name": "Milk & Matcha",
+    "description": "Đồ uống sữa, matcha",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "100000000000000000000004"
+    },
+    "name": "Bakery",
+    "description": "Bánh mì và bánh nướng",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "100000000000000000000005"
+    },
+    "name": "Dessert",
+    "description": "Bánh ngọt và món tráng miệng",
+    "status": "Active"
+  },
+  {
+    "_id": {
+      "$oid": "100000000000000000000006"
+    },
+    "name": "Other",
+    "description": "Sản phẩm khác",
+    "status": "Active"
+  }
+]

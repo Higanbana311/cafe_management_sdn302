@@ -1,0 +1,78 @@
+[
+  {
+    "_id": { "$oid": "140000000000000000000001" },
+    "name": "Phạm Quốc Duy",
+    "phone": "0909000001",
+    "email": "duy@cafe.local",
+    "role": "Manager",
+    "permissions": ["manage_staff", "manage_inventory", "view_report"],
+    "account": {
+      "username": "manager01",
+      "passwordHash": "$2b$10$N20UnOV/cNSgSd2zpB/EpuANKD/JqmAmb6XWoMUsalr/VAhsLoVT.",
+      "isActive": true
+    },
+    "salary": 12000000,
+    "hireDate": { "$date": "2026-06-01T00:00:00.000Z" },
+    "status": "Working"
+  },
+  {
+    "_id": { "$oid": "140000000000000000000002" },
+    "name": "Nguyễn Gia Huy",
+    "phone": "0909000002",
+    "email": "huy@cafe.local",
+    "role": "Cashier",
+    "permissions": ["create_order", "process_payment", "view_customer"],
+    "account": {
+      "username": "cashier01",
+      "passwordHash": "$2b$10$N20UnOV/cNSgSd2zpB/EpuANKD/JqmAmb6XWoMUsalr/VAhsLoVT.",
+      "isActive": true
+    },
+    "salary": 7500000,
+    "hireDate": { "$date": "2026-07-10T00:00:00.000Z" },
+    "status": "Working"
+  },
+  {
+    "_id": { "$oid": "140000000000000000000003" },
+    "name": "Trần Ngọc Mai",
+    "phone": "0909000003",
+    "email": "mai@cafe.local",
+    "role": "Barista",
+    "permissions": ["view_order", "update_order_status", "view_recipe"],
+    "account": {
+      "username": "barista01",
+      "passwordHash": "$2b$10$N20UnOV/cNSgSd2zpB/EpuANKD/JqmAmb6XWoMUsalr/VAhsLoVT.",
+      "isActive": true
+    },
+    "salary": 8000000,
+    "hireDate": { "$date": "2026-07-15T00:00:00.000Z" },
+    "status": "Working"
+  },
+  {
+    "_id": { "$oid": "140000000000000000000004" },
+    "name": "Lê Minh Sơn",
+    "phone": "0909000004",
+    "email": "son@cafe.local",
+    "role": "Waiter",
+    "permissions": ["create_order", "update_table", "manage_reservation"],
+    "account": {
+      "username": "waiter01",
+      "passwordHash": "$2b$10$N20UnOV/cNSgSd2zpB/EpuANKD/JqmAmb6XWoMUsalr/VAhsLoVT.",
+      "isActive": true
+    },
+    "salary": 7000000,
+    "hireDate": { "$date": "2026-08-01T00:00:00.000Z" },
+    "status": "Working"
+  },
+  {
+    "_id": { "$oid": "140000000000000000000005" },
+    "name": "Vũ Thu Ngọc",
+    "phone": "0909000005",
+    "email": "ngoc@cafe.local",
+    "role": "Barista",
+    "permissions": ["view_order", "update_order_status", "view_recipe"],
+    "account": null,
+    "salary": 8000000,
+    "hireDate": { "$date": "2026-08-12T00:00:00.000Z" },
+    "status": "Working"
+  }
+]

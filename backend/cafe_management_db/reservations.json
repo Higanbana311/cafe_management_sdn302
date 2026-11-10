@@ -1,0 +1,56 @@
+[
+  {
+    "_id": {
+      "$oid": "180000000000000000000001"
+    },
+    "reservationCode": "RSV001",
+    "customerId": {
+      "$oid": "120000000000000000000002"
+    },
+    "tableId": {
+      "$oid": "170000000000000000000005"
+    },
+    "reservationDate": {
+      "$date": "2026-10-06T11:00:00.000Z"
+    },
+    "guestCount": 4,
+    "note": "Bàn gần cửa sổ",
+    "status": "Confirmed"
+  },
+  {
+    "_id": {
+      "$oid": "180000000000000000000002"
+    },
+    "reservationCode": "RSV002",
+    "customerId": {
+      "$oid": "120000000000000000000003"
+    },
+    "tableId": {
+      "$oid": "170000000000000000000003"
+    },
+    "reservationDate": {
+      "$date": "2026-10-06T12:30:00.000Z"
+    },
+    "guestCount": 3,
+    "note": "",
+    "status": "Pending"
+  },
+  {
+    "_id": {
+      "$oid": "180000000000000000000003"
+    },
+    "reservationCode": "RSV003",
+    "customerId": {
+      "$oid": "120000000000000000000004"
+    },
+    "tableId": {
+      "$oid": "170000000000000000000007"
+    },
+    "reservationDate": {
+      "$date": "2026-10-07T10:00:00.000Z"
+    },
+    "guestCount": 4,
+    "note": "Khu vực ngoài trời",
+    "status": "Confirmed"
+  }
+]

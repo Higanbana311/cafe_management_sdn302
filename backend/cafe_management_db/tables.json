@@ -1,0 +1,58 @@
+[
+  {
+    "_id": { "$oid": "170000000000000000000001" },
+    "tableNumber": 1,
+    "area": "Tầng 1",
+    "capacity": 2,
+    "status": "Available"
+  },
+  {
+    "_id": { "$oid": "170000000000000000000002" },
+    "tableNumber": 2,
+    "area": "Tầng 1",
+    "capacity": 4,
+    "status": "Occupied"
+  },
+  {
+    "_id": { "$oid": "170000000000000000000003" },
+    "tableNumber": 3,
+    "area": "Tầng 1",
+    "capacity": 4,
+    "status": "Available"
+  },
+  {
+    "_id": { "$oid": "170000000000000000000004" },
+    "tableNumber": 4,
+    "area": "Tầng 2",
+    "capacity": 2,
+    "status": "Available"
+  },
+  {
+    "_id": { "$oid": "170000000000000000000005" },
+    "tableNumber": 5,
+    "area": "Tầng 2",
+    "capacity": 4,
+    "status": "Reserved"
+  },
+  {
+    "_id": { "$oid": "170000000000000000000006" },
+    "tableNumber": 6,
+    "area": "Tầng 2",
+    "capacity": 6,
+    "status": "Available"
+  },
+  {
+    "_id": { "$oid": "170000000000000000000007" },
+    "tableNumber": 7,
+    "area": "Ngoài trời",
+    "capacity": 4,
+    "status": "Available"
+  },
+  {
+    "_id": { "$oid": "170000000000000000000008" },
+    "tableNumber": 8,
+    "area": "Ngoài trời",
+    "capacity": 6,
+    "status": "Available"
+  }
+]

@@ -1,0 +1,148 @@
+[
+  {
+    "_id": { "$oid": "110000000000000000000001" },
+    "name": "Cà phê đen",
+    "categoryId": { "$oid": "100000000000000000000001" },
+    "price": 25000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000001" }, "quantity": 0.02, "unit": "kg" }
+      ],
+      "instructions": "Pha cà phê phin hoặc espresso, phục vụ nóng hoặc đá."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000002" },
+    "name": "Cà phê sữa",
+    "categoryId": { "$oid": "100000000000000000000001" },
+    "price": 30000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000001" }, "quantity": 0.02, "unit": "kg" },
+        { "ingredientId": { "$oid": "1c0000000000000000000003" }, "quantity": 0.05, "unit": "can" }
+      ],
+      "instructions": "Pha cà phê và thêm sữa đặc."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000003" },
+    "name": "Bạc xỉu",
+    "categoryId": { "$oid": "100000000000000000000001" },
+    "price": 35000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000001" }, "quantity": 0.01, "unit": "kg" },
+        { "ingredientId": { "$oid": "1c0000000000000000000002" }, "quantity": 0.1, "unit": "liter" },
+        { "ingredientId": { "$oid": "1c0000000000000000000003" }, "quantity": 0.05, "unit": "can" }
+      ],
+      "instructions": "Pha sữa tươi, sữa đặc và một phần cà phê."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000004" },
+    "name": "Cappuccino",
+    "categoryId": { "$oid": "100000000000000000000001" },
+    "price": 45000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000001" }, "quantity": 0.018, "unit": "kg" },
+        { "ingredientId": { "$oid": "1c0000000000000000000002" }, "quantity": 0.12, "unit": "liter" }
+      ],
+      "instructions": "Pha espresso, thêm sữa nóng và bọt sữa."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000005" },
+    "name": "Latte",
+    "categoryId": { "$oid": "100000000000000000000001" },
+    "price": 45000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000001" }, "quantity": 0.018, "unit": "kg" },
+        { "ingredientId": { "$oid": "1c0000000000000000000002" }, "quantity": 0.18, "unit": "liter" }
+      ],
+      "instructions": "Pha espresso và thêm sữa nóng."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000006" },
+    "name": "Trà đào cam sả",
+    "categoryId": { "$oid": "100000000000000000000002" },
+    "price": 40000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000004" }, "quantity": 0.03, "unit": "bottle" }
+      ],
+      "instructions": "Pha trà cùng syrup đào, cam và sả."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000007" },
+    "name": "Trà vải",
+    "categoryId": { "$oid": "100000000000000000000002" },
+    "price": 38000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000005" }, "quantity": 0.03, "unit": "bottle" }
+      ],
+      "instructions": "Pha trà cùng syrup vải và đá."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000008" },
+    "name": "Matcha Latte",
+    "categoryId": { "$oid": "100000000000000000000003" },
+    "price": 48000,
+    "unit": "cup",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000006" }, "quantity": 0.01, "unit": "kg" },
+        { "ingredientId": { "$oid": "1c0000000000000000000002" }, "quantity": 0.15, "unit": "liter" }
+      ],
+      "instructions": "Đánh matcha và pha cùng sữa."
+    }
+  },
+  {
+    "_id": { "$oid": "110000000000000000000009" },
+    "name": "Croissant bơ",
+    "categoryId": { "$oid": "100000000000000000000004" },
+    "price": 30000,
+    "unit": "piece",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000007" }, "quantity": 1, "unit": "piece" }
+      ],
+      "instructions": "Làm nóng bánh trước khi phục vụ."
+    }
+  },
+  {
+    "_id": { "$oid": "11000000000000000000000a" },
+    "name": "Tiramisu",
+    "categoryId": { "$oid": "100000000000000000000005" },
+    "price": 45000,
+    "unit": "piece",
+    "isAvailable": true,
+    "recipe": {
+      "ingredients": [
+        { "ingredientId": { "$oid": "1c0000000000000000000008" }, "quantity": 1, "unit": "piece" }
+      ],
+      "instructions": "Lấy một lát bánh và phục vụ lạnh."
+    }
+  }
+]

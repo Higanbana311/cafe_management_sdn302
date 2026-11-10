@@ -1,0 +1,33 @@
+const express = require("express");
+const authRoutes = require("./auth.js");
+const dashboardRoutes = require("./dashboard.js");
+const categoryRoutes = require("./category.js");
+const customerRoutes = require("./customer.js");
+const employeeRoutes = require("./employee.js");
+const expenseRoutes = require("./expense.js");
+const ingredientRoutes = require("./ingredient.js");
+const orderRoutes = require("./order.js");
+const productRoutes = require("./product.js");
+const promotionRoutes = require("./promotion.js");
+const purchaseOrderRoutes = require("./purchaseOrder.js");
+const reservationRoutes = require("./reservation.js");
+const supplierRoutes = require("./supplier.js");
+const tableRoutes = require("./table.js");
+const route = express.Router();
+
+route.use("/auth", authRoutes);
+route.use("/dashboard", dashboardRoutes);
+route.use("/categories", categoryRoutes);
+route.use("/customers", customerRoutes);
+route.use("/employees", employeeRoutes);
+route.use("/expenses", expenseRoutes);
+route.use("/ingredients", ingredientRoutes);
+route.use("/orders", orderRoutes);
+route.use("/products", productRoutes);
+route.use("/promotions", promotionRoutes);
+route.use("/purchase-orders", purchaseOrderRoutes);
+route.use("/reservations", reservationRoutes);
+route.use("/suppliers", supplierRoutes);
+route.use("/tables", tableRoutes);
+
+module.exports = route;

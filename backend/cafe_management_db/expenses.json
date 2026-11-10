@@ -1,0 +1,66 @@
+[
+  {
+    "_id": {
+      "$oid": "230000000000000000000001"
+    },
+    "expenseCode": "EXP001",
+    "category": "Electricity",
+    "description": "Tiền điện tháng 09/2026",
+    "amount": 3200000,
+    "expenseDate": {
+      "$date": "2026-10-02T00:00:00.000Z"
+    },
+    "employeeId": {
+      "$oid": "140000000000000000000001"
+    },
+    "paymentMethod": "Bank Transfer"
+  },
+  {
+    "_id": {
+      "$oid": "230000000000000000000002"
+    },
+    "expenseCode": "EXP002",
+    "category": "Water",
+    "description": "Tiền nước tháng 09/2026",
+    "amount": 850000,
+    "expenseDate": {
+      "$date": "2026-10-02T00:00:00.000Z"
+    },
+    "employeeId": {
+      "$oid": "140000000000000000000001"
+    },
+    "paymentMethod": "Bank Transfer"
+  },
+  {
+    "_id": {
+      "$oid": "230000000000000000000003"
+    },
+    "expenseCode": "EXP003",
+    "category": "Maintenance",
+    "description": "Bảo trì máy pha cà phê",
+    "amount": 1200000,
+    "expenseDate": {
+      "$date": "2026-10-04T00:00:00.000Z"
+    },
+    "employeeId": {
+      "$oid": "140000000000000000000001"
+    },
+    "paymentMethod": "Cash"
+  },
+  {
+    "_id": {
+      "$oid": "230000000000000000000004"
+    },
+    "expenseCode": "EXP004",
+    "category": "Other",
+    "description": "Mua vật dụng vệ sinh",
+    "amount": 450000,
+    "expenseDate": {
+      "$date": "2026-10-05T00:00:00.000Z"
+    },
+    "employeeId": {
+      "$oid": "140000000000000000000001"
+    },
+    "paymentMethod": "Cash"
+  }
+]
