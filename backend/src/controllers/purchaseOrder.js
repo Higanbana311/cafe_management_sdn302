@@ -3,8 +3,35 @@ const PurchaseOrder = require("../models/purchaseOrder");
 const Supplier = require("../models/supplier");
 const Employee = require("../models/employee");
 const Ingredient = require("../models/ingredient");
+const Expense = require("../models/expense");
 
 const isValidId = (id) => mongoose.isValidObjectId(id);
+const STATUS_VALUES = ["Pending", "Received", "Cancelled"];
+
+// Mirrors a "Paid" purchase order into the Expenses list (so purchasing cost
+// shows up there without being entered twice), and keeps it in sync as the
+// order's payment status or amount changes. Best-effort, like the ingredient
+// stock sync below: it only reaches as far as the purchase order itself.
+const syncExpenseForPurchaseOrder = async (purchaseOrder) => {
+  if (purchaseOrder.paymentStatus === "Paid") {
+    await Expense.findOneAndUpdate(
+      { purchaseOrderId: purchaseOrder._id },
+      {
+        expenseCode: `PO-${purchaseOrder.purchaseCode}`,
+        category: "Purchase",
+        description: `Đơn nhập hàng ${purchaseOrder.purchaseCode}`,
+        amount: purchaseOrder.totalAmount,
+        expenseDate: purchaseOrder.purchaseDate,
+        employeeId: purchaseOrder.employeeId,
+        paymentMethod: "Cash",
+        purchaseOrderId: purchaseOrder._id,
+      },
+      { upsert: true, setDefaultsOnInsert: true },
+    );
+  } else {
+    await Expense.deleteOne({ purchaseOrderId: purchaseOrder._id });
+  }
+};
 
 // Stock only moves once a purchase order is marked "Received" — a Pending
 // or Cancelled order shouldn't have already put goods on the shelf.
@@ -115,6 +142,7 @@ const createPurchaseOrder = async (req, res) => {
     if (status === "Received") {
       await applyStockForItems(items, 1);
     }
+    await syncExpenseForPurchaseOrder(savedPurchaseOrder);
     res.status(201).json(savedPurchaseOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -173,6 +201,36 @@ const updatePurchaseOrder = async (req, res) => {
     if (status === "Received") {
       await applyStockForItems(items, 1);
     }
+    await syncExpenseForPurchaseOrder(purchaseOrder);
+    res.json(purchaseOrder);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Lightweight status-only transition (e.g. Pending -> Received) for the inline
+// select on the purchase orders list, without resubmitting the whole order.
+const updatePurchaseOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    if (!isValidId(id)) {
+      return res.status(400).json({ message: "Invalid purchase order id." });
+    }
+    if (!STATUS_VALUES.includes(status)) {
+      return res.status(400).json({ message: `status must be one of: ${STATUS_VALUES.join(", ")}.` });
+    }
+    const existing = await PurchaseOrder.findById(id);
+    if (!existing) {
+      return res.status(404).json({ message: "Purchase order not found." });
+    }
+    const purchaseOrder = await PurchaseOrder.findByIdAndUpdate(id, { status }, { new: true, runValidators: true });
+    if (existing.status === "Received") {
+      await applyStockForItems(existing.items, -1);
+    }
+    if (status === "Received") {
+      await applyStockForItems(existing.items, 1);
+    }
     res.json(purchaseOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -192,6 +250,7 @@ const deletePurchaseOrder = async (req, res) => {
     if (deletedPurchaseOrder.status === "Received") {
       await applyStockForItems(deletedPurchaseOrder.items, -1);
     }
+    await Expense.deleteOne({ purchaseOrderId: deletedPurchaseOrder._id });
     res.json({ message: "Purchase order deleted successfully." });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -203,5 +262,6 @@ module.exports = {
   getPurchaseOrderById,
   createPurchaseOrder,
   updatePurchaseOrder,
+  updatePurchaseOrderStatus,
   deletePurchaseOrder,
 };

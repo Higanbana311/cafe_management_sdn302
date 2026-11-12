@@ -4,6 +4,7 @@ import DataTable from "../components/DataTable";
 import Modal from "../components/Modal";
 
 const formatVND = (n) => (n || 0).toLocaleString("vi-VN") + " đ";
+const STATUS_OPTIONS = ["Pending", "Received", "Cancelled"];
 
 const emptyItemRow = () => ({ ingredientId: "", name: "", quantity: "", unit: "", unitPrice: "" });
 
@@ -42,7 +43,19 @@ const PurchaseOrdersPage = () => {
     { key: "purchaseDate", label: "Ngày", render: (row) => new Date(row.purchaseDate).toLocaleDateString("vi-VN") },
     { key: "totalAmount", label: "Tổng tiền", render: (row) => formatVND(row.totalAmount) },
     { key: "paymentStatus", label: "Thanh toán" },
-    { key: "status", label: "Trạng thái" },
+    {
+      key: "status",
+      label: "Trạng thái",
+      render: (row) => (
+        <select value={row.status} onChange={(e) => updateStatus(row, e.target.value)} className="status-select">
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+      ),
+    },
   ];
 
   const loadAll = async () => {
@@ -69,6 +82,15 @@ const PurchaseOrdersPage = () => {
   useEffect(() => {
     loadAll();
   }, []);
+
+  const updateStatus = async (row, newStatus) => {
+    try {
+      await http.patch(`/purchase-orders/${row._id}/status`, { status: newStatus });
+      await loadAll();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const openAdd = () => {
     setEditing(null);

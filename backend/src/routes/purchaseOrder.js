@@ -5,6 +5,7 @@ const {
   getPurchaseOrderById,
   createPurchaseOrder,
   updatePurchaseOrder,
+  updatePurchaseOrderStatus,
   deletePurchaseOrder,
 } = require("../controllers/purchaseOrder.js");
 const { verifyToken, requireRole } = require("../middleware/auth.js");
@@ -19,6 +20,7 @@ purchaseOrderRouter.get("/", requireRole(MANAGER), getAllPurchaseOrders);
 purchaseOrderRouter.get("/:id", requireRole(MANAGER), getPurchaseOrderById);
 purchaseOrderRouter.post("/", requireRole(...KITCHEN), createPurchaseOrder);
 purchaseOrderRouter.put("/:id", requireRole(MANAGER), updatePurchaseOrder);
+purchaseOrderRouter.patch("/:id/status", requireRole(MANAGER), updatePurchaseOrderStatus);
 purchaseOrderRouter.delete("/:id", requireRole(MANAGER), deletePurchaseOrder);
 
 module.exports = purchaseOrderRouter;

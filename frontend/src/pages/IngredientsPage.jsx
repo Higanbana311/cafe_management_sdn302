@@ -67,8 +67,9 @@ const IngredientsPage = () => {
     setError("");
     try {
       if (type === "add") {
-        // Stock-in logged as a real purchase order (status "Received") so the
-        // cost shows up in the purchasing/profit reports, not just a bare count.
+        // Stock-in logged as a real purchase order so the cost shows up in the
+        // purchasing/profit reports. Created as "Pending" — stock is only added
+        // once a manager switches it to "Received" from the Purchase Orders page.
         const qty = Number(quantity);
         const price = Number(unitPrice) || 0;
         const subtotal = qty * price;
@@ -78,7 +79,7 @@ const IngredientsPage = () => {
           employeeId: employee._id,
           purchaseDate: new Date().toISOString(),
           paymentStatus,
-          status: "Received",
+          status: "Pending",
           totalAmount: subtotal,
           items: [
             {
@@ -152,8 +153,8 @@ const IngredientsPage = () => {
                   </select>
                 </label>
                 <label className="form-field">
-                  <span>Đơn giá (VNĐ)</span>
-                  <input type="number" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} />
+                  <span>Đơn giá (VNĐ) *</span>
+                  <input type="number" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} required />
                 </label>
                 <label className="form-field">
                   <span>Thanh toán</span>
@@ -162,7 +163,10 @@ const IngredientsPage = () => {
                     <option value="Unpaid">Unpaid</option>
                   </select>
                 </label>
-                <span className="field-hint">Xác nhận sẽ tự tạo một Đơn nhập hàng (đã nhận hàng) để ghi nhận chi phí.</span>
+                <span className="field-hint">
+                  Xác nhận sẽ tạo một Đơn nhập hàng ở trạng thái "Pending" để ghi nhận chi phí. Tồn kho chỉ được cộng
+                  khi đơn này được chuyển sang "Received" ở trang Đơn nhập hàng (quyền Quản lý).
+                </span>
               </>
             )}
             {error && <div className="alert alert-error">{error}</div>}

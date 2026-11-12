@@ -12,7 +12,15 @@ const expenseSchema = new mongoose.Schema(
             ref: 'Employee',
             required: true
         },
-        paymentMethod: { type: String, required: true, trim: true }
+        paymentMethod: { type: String, required: true, trim: true },
+        // Set when this expense was auto-generated from a paid purchase order
+        // (see purchaseOrder controller's syncExpenseForPurchaseOrder), so it can
+        // be found again, updated or removed as that order's payment status changes.
+        purchaseOrderId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'PurchaseOrder',
+            default: null
+        }
     },
     { collection: 'expenses' }
 );
