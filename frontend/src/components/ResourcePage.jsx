@@ -41,6 +41,8 @@ const ResourcePage = ({
   searchable = true,
   extraFilter,
   filterBar,
+  canEditRow,
+  canDeleteRow,
 }) => {
   const { employee } = useAuth();
   const allowCreate = !module || can(employee?.role, module, "create");
@@ -209,6 +211,8 @@ const ResourcePage = ({
           idKey={idKey}
           onEdit={allowEdit ? openEdit : undefined}
           onDelete={allowDelete ? handleDelete : undefined}
+          canEditRow={canEditRow}
+          canDeleteRow={canDeleteRow}
           extraActions={extraActions}
         />
       )}

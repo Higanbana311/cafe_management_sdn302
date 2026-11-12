@@ -1,4 +1,4 @@
-const DataTable = ({ columns, rows, idKey = "_id", onEdit, onDelete, extraActions }) => {
+const DataTable = ({ columns, rows, idKey = "_id", onEdit, onDelete, canEditRow, canDeleteRow, extraActions }) => {
   if (!rows || rows.length === 0) {
     return <div className="empty-state">Chưa có dữ liệu.</div>;
   }
@@ -23,12 +23,12 @@ const DataTable = ({ columns, rows, idKey = "_id", onEdit, onDelete, extraAction
               {(onEdit || onDelete || extraActions) && (
                 <td className="col-actions">
                   {extraActions && extraActions(row)}
-                  {onEdit && (
+                  {onEdit && (!canEditRow || canEditRow(row)) && (
                     <button className="btn btn-sm btn-secondary" onClick={() => onEdit(row)}>
                       Sửa
                     </button>
                   )}
-                  {onDelete && (
+                  {onDelete && (!canDeleteRow || canDeleteRow(row)) && (
                     <button className="btn btn-sm btn-danger" onClick={() => onDelete(row)}>
                       Xóa
                     </button>

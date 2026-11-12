@@ -7,6 +7,7 @@ const {
   updateEmployee,
   deleteEmployee,
   setEmployeeAccount,
+  setEmployeeAccountStatus,
 } = require("../controllers/employee.js");
 const { verifyToken, requireRole } = require("../middleware/auth.js");
 const { MANAGER, ALL_STAFF } = require("../config/roles.js");
@@ -21,5 +22,6 @@ employeeRouter.post("/", requireRole(MANAGER), createEmployee);
 employeeRouter.put("/:id", requireRole(MANAGER), updateEmployee);
 employeeRouter.delete("/:id", requireRole(MANAGER), deleteEmployee);
 employeeRouter.put("/:id/account", requireRole(MANAGER), setEmployeeAccount);
+employeeRouter.patch("/:id/account/status", requireRole(MANAGER), setEmployeeAccountStatus);
 
 module.exports = employeeRouter;

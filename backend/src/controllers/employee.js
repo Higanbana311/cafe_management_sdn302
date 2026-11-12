@@ -105,6 +105,13 @@ const deleteEmployee = async (req, res) => {
     if (!isValidId(id)) {
       return res.status(400).json({ message: "Invalid employee id." });
     }
+    const target = await Employee.findById(id);
+    if (!target) {
+      return res.status(404).json({ message: "Employee not found." });
+    }
+    if (target.role === "Manager") {
+      return res.status(400).json({ message: "Manager accounts cannot be deleted." });
+    }
     const [hasOrders, hasExpenses, hasPurchaseOrders] = await Promise.all([
       Order.exists({ employeeId: id }),
       Expense.exists({ employeeId: id }),
@@ -156,6 +163,34 @@ const setEmployeeAccount = async (req, res) => {
   }
 };
 
+const setEmployeeAccountStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body;
+    if (!isValidId(id)) {
+      return res.status(400).json({ message: "Invalid employee id." });
+    }
+    if (typeof isActive !== "boolean") {
+      return res.status(400).json({ message: "isActive must be a boolean." });
+    }
+    const employee = await Employee.findById(id);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found." });
+    }
+    if (!employee.account) {
+      return res.status(400).json({ message: "This employee has no login account yet." });
+    }
+    if (!isActive && employee.role === "Manager") {
+      return res.status(400).json({ message: "Manager accounts cannot be locked." });
+    }
+    employee.account.isActive = isActive;
+    await employee.save();
+    res.json(sanitize(employee));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllEmployees,
   getEmployeeById,
@@ -163,4 +198,5 @@ module.exports = {
   updateEmployee,
   deleteEmployee,
   setEmployeeAccount,
+  setEmployeeAccountStatus,
 };

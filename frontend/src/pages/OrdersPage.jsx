@@ -7,6 +7,7 @@ import { can } from "../auth/permissions";
 import { ORDER_STATUS_OPTIONS as STATUS_OPTIONS } from "../constants/orderStatus";
 
 const formatVND = (n) => (n || 0).toLocaleString("vi-VN") + " đ";
+const formatDate = (d) => (d ? new Date(d).toLocaleString("vi-VN") : "-");
 
 // 1 member point = 1,000 VND off the order (matches backend POINT_VALUE_VND).
 const POINT_VALUE_VND = 1000;
@@ -67,6 +68,7 @@ const OrdersPage = () => {
 
   const columns = [
     { key: "orderCode", label: "Mã đơn" },
+    { key: "orderDate", label: "Ngày đặt", render: (row) => formatDate(row.orderDate) },
     { key: "orderType", label: "Loại" },
     { key: "tableId", label: "Bàn", render: (row) => (row.orderType === "Dine-in" ? tableLabel(row.tableId) : "-") },
     { key: "customerId", label: "Khách hàng", render: (row) => (row.customerId ? customerName(row.customerId) : "Khách lẻ") },

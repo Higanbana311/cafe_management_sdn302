@@ -28,7 +28,9 @@ const MODULE_PERMISSIONS = {
   // (which could orphan references in product recipes / purchase orders) is Manager-only.
   ingredients: { view: KITCHEN, create: KITCHEN, edit: KITCHEN, delete: [MANAGER] },
   suppliers: { view: [MANAGER], create: [MANAGER], edit: [MANAGER], delete: [MANAGER] },
-  purchaseOrders: { view: [MANAGER], create: [MANAGER], edit: [MANAGER], delete: [MANAGER] },
+  // Full purchase-order history is manager-only; create is also open to kitchen
+  // staff so a "stock in" from the ingredients page can log a real cost record.
+  purchaseOrders: { view: [MANAGER], create: KITCHEN, edit: [MANAGER], delete: [MANAGER] },
   expenses: { view: [MANAGER], create: [MANAGER], edit: [MANAGER], delete: [MANAGER] },
   // Front-of-house looks codes up while building an order; only managers manage them.
   promotions: { view: FRONT_OF_HOUSE, create: [MANAGER], edit: [MANAGER], delete: [MANAGER] },

@@ -78,6 +78,15 @@ const EmployeesPage = () => {
     }
   };
 
+  const toggleAccountLock = async (row) => {
+    try {
+      await http.patch(`/employees/${row._id}/account/status`, { isActive: !row.account.isActive });
+      setRefreshKey((k) => k + 1);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <>
       <ResourcePage
@@ -87,12 +96,21 @@ const EmployeesPage = () => {
         columns={columns}
         fields={fields}
         module="employees"
+        canDeleteRow={(row) => row.role !== "Manager"}
         extraActions={(row) => (
-          <button type="button" className="btn btn-sm btn-secondary" onClick={() => openAccount(row)}>
-            Tài khoản
-          </button>
+          <>
+            <button type="button" className="btn btn-sm btn-secondary" onClick={() => openAccount(row)}>
+              Tài khoản
+            </button>
+            {row.account && row.role !== "Manager" && (
+              <button type="button" className="btn btn-sm btn-secondary" onClick={() => toggleAccountLock(row)}>
+                {row.account.isActive ? "Khóa tài khoản" : "Mở khóa"}
+              </button>
+            )}
+          </>
         )}
       />
+      {error && <div className="alert alert-error">{error}</div>}
       {managing && (
         <Modal title={`Tài khoản đăng nhập: ${managing.name}`} onClose={() => setManaging(null)}>
           <form onSubmit={submitAccount} className="form-grid">
